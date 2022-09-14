@@ -11,6 +11,10 @@ pre-commit = "*"
 flask = "*"
 flask-sqlalchemy = "*"
 marshmallow = "*"
+python-dotenv = "*"
+flask-cors = "*"
+flask-migrate = "*"
+mysql-connector-python = "==8.0.29"
 
 [dev-packages]
 
