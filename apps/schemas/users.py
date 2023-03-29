@@ -14,5 +14,12 @@ class UserSchema(ma.Schema):
     _links = "sss"
 
 
+class UserLoginSchema(ma.Schema):
+    class Meta:
+        model = Users
+        fields = ("email",)
+
+
 user_schema = UserSchema()
+user_login_schema = UserLoginSchema()
 users_schema = UserSchema(many=True)

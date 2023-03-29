@@ -19,6 +19,7 @@ class Config(object):
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
+    SECRET_KEY = os.getenv("SECRET_KEY", "123456")
 
 
 class DevConfig(Config):

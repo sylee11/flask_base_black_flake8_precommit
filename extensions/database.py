@@ -6,4 +6,4 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 migrate = Migrate()
 ma = Marshmallow()
-swagger = Swagger()
+swagger = Swagger(template_file="./open_api.yaml")

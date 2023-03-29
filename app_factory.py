@@ -2,10 +2,10 @@ import json
 import traceback
 from http import HTTPStatus
 
-from flask import Flask, current_app, request
+from flask import Flask, current_app, jsonify, request
 from flask_cors import CORS
 
-from apps.ultis.error import Conflict, Forbidden, Unauthorized
+from apps.ultis.error import Conflict, Forbidden, NotFound, Unauthorized
 from config import config
 from extensions.blueprint import register_blue_print
 from extensions.database import db, ma, migrate, swagger
@@ -46,29 +46,39 @@ def create_app():
     #         f"\nbody: {response_body}")
     #     return response
 
-    @app.errorhandler(Exception)
+    @app.errorhandler(HTTPStatus.INTERNAL_SERVER_ERROR.value)
     def error_handler(ex):
         app.logger.error(traceback.format_exc())
         return {
             "message": HTTPStatus.INTERNAL_SERVER_ERROR.name
         }, HTTPStatus.INTERNAL_SERVER_ERROR.value
 
-    @app.errorhandler(Conflict)
+    @app.errorhandler(HTTPStatus.CONFLICT.value)
     def conflict_handler(error):
         return {
-            "message": HTTPStatus.CONFLICT.description
+            "message": HTTPStatus.CONFLICT.phrase
         }, HTTPStatus.CONFLICT.value
 
-    @app.errorhandler(Unauthorized)
+    @app.errorhandler(HTTPStatus.UNAUTHORIZED.value)
     def unauthorized_handler(error):
         return {
-            "message": HTTPStatus.UNAUTHORIZED.description
+            "message": HTTPStatus.UNAUTHORIZED.phrase
         }, HTTPStatus.UNAUTHORIZED.value
 
     @app.errorhandler(Forbidden)
     def forbidden_handler(error):
         return {
-            "message": HTTPStatus.FORBIDDEN.description
+            "message": HTTPStatus.FORBIDDEN.phrase
         }, HTTPStatus.FORBIDDEN.value
+
+    @app.errorhandler(HTTPStatus.NOT_FOUND)
+    def notfound_handler(error):
+        return {"message": error.description}, HTTPStatus.NOT_FOUND.value
+
+    @app.errorhandler(HTTPStatus.BAD_REQUEST)
+    def bad_request_handler(error):
+        return {
+            "reason": error.description.messages
+        }, HTTPStatus.BAD_REQUEST.value
 
     return app
